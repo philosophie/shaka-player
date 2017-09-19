@@ -15,26 +15,26 @@
  * limitations under the License.
  */
 
-describe('DBEngine', /** @suppress {accessControls} */ function() {
+describe('IndexedDBEngine', /** @suppress {accessControls} */ function() {
   /** @const */
-  var oldName = shaka.offline.DBEngine.DB_NAME_;
+  var oldName = shaka.offline.IndexedDBEngine.DB_NAME_;
 
-  /** @type {!shaka.offline.DBEngine} */
+  /** @type {!shaka.offline.IndexedDBEngine} */
   var db;
   /** @type {!Object.<string, string>} */
   var schema;
 
   beforeAll(function() {
-    if (shaka.offline.DBEngine.isSupported()) {
-      shaka.offline.DBEngine.DB_NAME_ += '_test';
+    if (shaka.offline.IndexedDBEngine.isSupported()) {
+      shaka.offline.IndexedDBEngine.DB_NAME_ += '_test';
     }
   });
 
   beforeEach(function(done) {
-    if (shaka.offline.DBEngine.isSupported()) {
+    if (shaka.offline.IndexedDBEngine.isSupported()) {
       schema = {'test': 'key', 'other': 'key'};
-      shaka.offline.DBEngine.deleteDatabase().then(function() {
-        db = new shaka.offline.DBEngine();
+      shaka.offline.IndexedDBEngine.deleteDatabase().then(function() {
+        db = new shaka.offline.IndexedDBEngine();
         return db.init(schema, /* opt_retryCount */ 5);
       }).catch(fail).then(done);
     } else {
@@ -43,13 +43,13 @@ describe('DBEngine', /** @suppress {accessControls} */ function() {
   });
 
   afterAll(function() {
-    if (shaka.offline.DBEngine.isSupported()) {
-      shaka.offline.DBEngine.DB_NAME_ = oldName;
+    if (shaka.offline.IndexedDBEngine.isSupported()) {
+      shaka.offline.IndexedDBEngine.DB_NAME_ = oldName;
     }
   });
 
   afterEach(function(done) {
-    if (shaka.offline.DBEngine.isSupported()) {
+    if (shaka.offline.IndexedDBEngine.isSupported()) {
       db.destroy().catch(fail).then(done);
     } else {
       done();
@@ -57,8 +57,8 @@ describe('DBEngine', /** @suppress {accessControls} */ function() {
   });
 
   it('stores and retrieves values', function(done) {
-    if (!shaka.offline.DBEngine.isSupported()) {
-      pending('DBEngine is not supported on this platform.');
+    if (!shaka.offline.IndexedDBEngine.isSupported()) {
+      pending('IndexedDBEngine is not supported on this platform.');
     }
     var data = {
       key: 123,
@@ -72,8 +72,8 @@ describe('DBEngine', /** @suppress {accessControls} */ function() {
   });
 
   it('supports concurrent operations', function(done) {
-    if (!shaka.offline.DBEngine.isSupported()) {
-      pending('DBEngine is not supported on this platform.');
+    if (!shaka.offline.IndexedDBEngine.isSupported()) {
+      pending('IndexedDBEngine is not supported on this platform.');
     }
     var data1 = {key: 1, extra: 'cat'};
     var data2 = {key: 2, foobar: 'baz'};
@@ -100,8 +100,8 @@ describe('DBEngine', /** @suppress {accessControls} */ function() {
   });
 
   it('supports remove', function(done) {
-    if (!shaka.offline.DBEngine.isSupported()) {
-      pending('DBEngine is not supported on this platform.');
+    if (!shaka.offline.IndexedDBEngine.isSupported()) {
+      pending('IndexedDBEngine is not supported on this platform.');
     }
     Promise.all([
       db.insert('test', {key: 1, i: 4}),
@@ -128,8 +128,8 @@ describe('DBEngine', /** @suppress {accessControls} */ function() {
   });
 
   it('supports iterating over each element', function(done) {
-    if (!shaka.offline.DBEngine.isSupported()) {
-      pending('DBEngine is not supported on this platform.');
+    if (!shaka.offline.IndexedDBEngine.isSupported()) {
+      pending('IndexedDBEngine is not supported on this platform.');
     }
     var testData = [
       {key: 1, i: 4},
@@ -152,8 +152,8 @@ describe('DBEngine', /** @suppress {accessControls} */ function() {
   });
 
   it('aborts transactions on destroy()', function(done) {
-    if (!shaka.offline.DBEngine.isSupported()) {
-      pending('DBEngine is not supported on this platform.');
+    if (!shaka.offline.IndexedDBEngine.isSupported()) {
+      pending('IndexedDBEngine is not supported on this platform.');
     }
     var expectedError = new shaka.util.Error(
         shaka.util.Error.Severity.CRITICAL,
@@ -184,8 +184,8 @@ describe('DBEngine', /** @suppress {accessControls} */ function() {
   });
 
   it('will find and reserve IDs', function(done) {
-    if (!shaka.offline.DBEngine.isSupported()) {
-      pending('DBEngine is not supported on this platform.');
+    if (!shaka.offline.IndexedDBEngine.isSupported()) {
+      pending('IndexedDBEngine is not supported on this platform.');
     }
     Promise
         .all([
@@ -200,7 +200,7 @@ describe('DBEngine', /** @suppress {accessControls} */ function() {
         // Destroy the database to refresh the IDs.
         .then(function() { return db.destroy(); })
         .then(function() {
-          db = new shaka.offline.DBEngine();
+          db = new shaka.offline.IndexedDBEngine();
           return db.init(schema);
         })
         .then(function() {
@@ -216,8 +216,8 @@ describe('DBEngine', /** @suppress {accessControls} */ function() {
   });
 
   it('will catch aborting transactions', function(done) {
-    if (!shaka.offline.DBEngine.isSupported()) {
-      pending('DBEngine is not supported on this platform.');
+    if (!shaka.offline.IndexedDBEngine.isSupported()) {
+      pending('IndexedDBEngine is not supported on this platform.');
     }
 
     // Change the insert function so that once the put request completes
